@@ -39,8 +39,10 @@ namespace Infraestructure.Configuration
 
         public string ObterStringConexao()
         {
-            //Provavelmente vai dar erro
-            return " Data Source=VAGNER-PC;Integrated Security=True"
+            
+            return " Data Source = VAGNER-PC; Initial Catalog = API_DDD_2022; Integrated Security = True;MultipleActiveResultSets=True"
+
+
 ;
         }
 

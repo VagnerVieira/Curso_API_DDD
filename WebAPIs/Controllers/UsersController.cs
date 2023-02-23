@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text;
 using WebAPIs.Models;
 using WebAPIs.Token;
 
@@ -56,7 +58,7 @@ namespace WebAPIs.Controllers
             }
         }
 
-        //Começar video no minuto 14:14
+        
 
         [AllowAnonymous]
         [Produces("application/json")]
@@ -80,6 +82,26 @@ namespace WebAPIs.Controllers
             {
                 return Ok(resultado.Errors);    
             }
+
+            // Geração de Confirmação caso precise
+            var userId = await _userManager.GetUserIdAsync(user);
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
+
+            //Retorno email
+            code = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(code));
+            var resultado2 = await _userManager.ConfirmEmailAsync(user, code);  
+
+            if (resultado2.Succeeded) 
+                return Ok("Usuário Adicionado com Sucesso");
+            
+            else
+                return Ok("Erro ao confirmar usuários");
+
         }
+
+
+
+
     }
 }
